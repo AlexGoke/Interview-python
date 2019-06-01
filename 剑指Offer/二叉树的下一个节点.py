@@ -19,7 +19,7 @@
 # 注意：“树中的节点同时包含了指向父节点的指针”——Node.next -> Node.parernt
 
 class Solution:
-    def GetNext(self, pNode):
+    def GetNext1(self, pNode):
         if not pNode:
             return 
         #先考虑有右子节点的
@@ -36,3 +36,30 @@ class Solution:
             return pNode
         else: 
             return pNode.next
+
+    # 更好的实现版本
+    def GetNext2(self, pNode):
+        # write code here
+        if pNode is None:
+            return 
+        # 注意当前节点是根节点的情况。所以在最开始设定pNext = None, 如果下列情况都不满足, 说明当前结点为根节点, 直接输出None
+        pNext = None
+        #有右子节点的情况：
+        if pNode.right:
+            pNode = pNode.right
+            while pNode.left:
+                pNode = pNode.left
+            pNext = pNode
+        #无右子节点的情况：
+        else:
+            if pNode.next and pNode.next.left == pNode:
+                pNext = pNode.next
+            elif pNode.next and pNode.next.right == pNode:
+                pNode = pNode.next
+                while pNode.next and pNode.next.right == pNode:
+                    pNode = pNode.next
+                #终止时, 1:当前节点有父节点，说明当前节点是父节点的左子节点
+                #        2: 当前节点无父节点（根节点），说明当前节点在位于根节点的右子树，所以没有下一个节点
+                if pNode.next:
+                    pNext = pNode.next
+        return pNext
